@@ -1,0 +1,145 @@
+/* Slide styles for The CPP and Me. Sizes are in Storyline slide pixels (960 x 540). */
+:root {
+  --brand: #285f74;      /* dark teal panel, from the published course */
+  --brand-ink: #285f74;
+  --accent: #00a0af;     /* player brand highlight */
+  --yellow: #e3e34f;     /* callouts, Did You Know? */
+  --pale: #edf2f3;
+  --ink: #3d3d3d;
+  --muted: #8a8a8a;
+}
+.slide { position: absolute; inset: 0; font-family: "Montserrat", sans-serif; color: var(--ink); }
+.slide > *, .layer > *, .card > *, .fb-panel > *, .psa-card > *, .nav-row > * { position: absolute; margin: 0; }
+.bg-white { background: #fff; }
+.bg-video { background: #0f3d4c; }
+/* The course master: pale background with soft triangles at the bottom right */
+.bg-pale {
+  background-color: var(--pale);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Cg fill='%23cfe6ea'%3E%3Cpath d='M300 70 220 300h80z' opacity='.7'/%3E%3Cpath d='M300 150 170 300h130z' opacity='.5'/%3E%3Cpath d='M240 200 140 300h100z' opacity='.45'/%3E%3Cpath d='M300 0 260 120l40 40z' opacity='.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right bottom;
+}
+.simg { object-fit: contain; user-select: none; }
+.simg.cover { object-fit: cover; }
+.simg.framed { box-shadow: 0 0 0 1px #d6dfe1; }
+.panel { background: var(--brand); }
+
+/* Timeline entrance animations */
+.tl { opacity: 0; visibility: hidden; transition: opacity .45s ease, transform .5s ease, visibility 0s linear .45s; }
+.tl.in { opacity: 1; visibility: visible; transform: none; transition: opacity .45s ease, transform .5s ease; }
+.tl.anim-fly-up:not(.in) { transform: translateY(24px); }
+.tl.anim-grow:not(.in) { transform: scale(.85); }
+.tl.anim-slide-in:not(.in) { transform: translateX(100%); }
+.tl.anim-slide-in { transition-duration: .35s, .45s; }
+.tl:not([class*=anim-]) { transition: none; }
+
+/* Text styles */
+.t-hero { color: #fff; font-weight: 700; font-size: 54px; line-height: 1.12; }
+.t-hero.sm { font-size: 38px; }
+.t-hero-sub { color: #fff; font-weight: 700; font-size: 31px; line-height: 1.25; }
+.t-title { color: var(--brand-ink); font-weight: 800; font-size: 30px; line-height: 1.2; }
+.t-title.center, .t-muted.center { text-align: center; }
+.t-muted { color: var(--muted); font-size: 16px; }
+.t-panel-title { color: #fff; font-weight: 800; font-size: 28px; line-height: 1.22; }
+.t-panel-body { color: #fff; font-size: 18px; line-height: 1.4; }
+.t-body { font-size: 20px; line-height: 1.32; color: var(--ink); }
+.t-body.sm { font-size: 17px; line-height: 1.45; }
+.t-body.xs { font-size: 16px; line-height: 1.4; }
+.t-body b { color: #22323a; }
+.t-q { color: var(--brand-ink); font-weight: 700; font-size: 22px; line-height: 1.3; }
+
+/* Buttons: the course uses rounded pill buttons */
+.sbtn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font: 700 18px/1 "Montserrat", sans-serif; text-decoration: none; cursor: pointer; border-radius: 22px; transition: background .15s, color .15s, box-shadow .15s, transform .1s; }
+.sbtn:active { transform: translateY(1px); }
+.sbtn .ic { display: inline-flex; }
+.sbtn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.sbtn svg.bubble { fill: #fff; stroke: none; width: 18px; height: 18px; }
+.pill-white { background: #fff; color: var(--brand-ink); border: 2px solid #fff; }
+.pill-white:hover { background: #e7f4f5; }
+.pill-white.shadow { box-shadow: 0 2px 8px rgba(0,0,0,.18); }
+.pill-outline { background: #fff; color: var(--brand-ink); border: 2px solid var(--brand); }
+.pill-outline:hover { background: var(--brand); color: #fff; }
+.pill-teal { background: var(--accent); color: #fff; border: 2px solid var(--accent); }
+.pill-teal:hover { background: #008895; border-color: #008895; }
+.pill-yellow { background: var(--yellow); color: var(--brand-ink); border: 2px solid var(--yellow); }
+.pill-yellow:hover { background: #f0f07a; }
+.pill-dark { background: var(--brand); color: #fff; border: 2px solid var(--brand); border-radius: 22px; }
+.pill-dark:hover { background: #1d4a5b; }
+.sbtn:focus-visible, .opt:focus-visible, .term:focus-visible, .close-sq:focus-visible { outline: 3px solid #f2b705; outline-offset: 2px; }
+
+/* 1.2 screenshot and callouts */
+.shot { background: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.18); border: 1px solid #dde4e6; overflow: hidden; }
+.callout { background: var(--yellow); color: #22323a; font-weight: 700; font-size: 19px; line-height: 1.3; padding: 8px 16px; box-shadow: 2px 3px 6px rgba(0,0,0,.18); }
+.callout::after { content: ""; position: absolute; border: 11px solid transparent; }
+.callout-left::after { left: -20px; top: 44px; border-right: 11px solid var(--yellow); }
+.callout-down::after { left: -20px; top: 18px; border-right: 11px solid var(--yellow); }
+
+/* 2.2 video placeholder */
+.video-ph { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #fff; gap: 6px; }
+.video-ph > * { position: static; }
+.vp-play { width: 84px; height: 84px; border-radius: 50%; background: rgba(255,255,255,.14); display: grid; place-items: center; margin-bottom: 10px; }
+.vp-play svg { width: 40px; height: 40px; fill: #fff; }
+.vp-title { font-weight: 800; font-size: 30px; }
+.vp-note { font-size: 16px; max-width: 520px; opacity: .85; line-height: 1.45; margin-bottom: 120px !important; }
+
+/* Quiz */
+.q-tag { background: var(--brand); color: #fff; font-weight: 700; font-size: 11.5px; padding: 6px 14px; }
+.opt { position: absolute; display: flex; align-items: center; gap: 12px; text-align: left; padding: 0 16px 0 12px; border-radius: 6px; font: 500 17px/1.35 "Montserrat", sans-serif; color: var(--ink); transition: background .15s; }
+.opt:hover { background: #e2eaec; }
+.opt[aria-checked=true] { background: #dfe8cf; }
+.radio { width: 20px; height: 20px; flex: none; border-radius: 50%; border: 2px solid #9a9a9a; background: #fff; display: grid; place-items: center; }
+.opt[aria-checked=true] .radio { border-color: var(--accent); }
+.opt[aria-checked=true] .radio::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+.layer { position: absolute; inset: 0; z-index: 20; pointer-events: none; }
+.layer > * { pointer-events: auto; }
+.layer.dim { background: rgba(28, 52, 62, .55); pointer-events: auto; }
+.fb-panel { background: var(--brand); color: #fff; box-shadow: -6px 0 18px rgba(0,0,0,.18); }
+.fb-corner { left: 0; top: 0; width: 48px; height: 48px; background: var(--accent); clip-path: polygon(0 0, 100% 0, 0 100%); }
+.fb-corner svg { position: absolute; left: 7px; top: 6px; width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 3.2; stroke-linecap: round; }
+.t-fb { color: #fff; font-weight: 800; font-size: 28px; }
+.t-fb-body { color: #fff; font-size: 17px; line-height: 1.42; }
+
+/* Pop-up cards (Did You Know?, glossary, results, alert) */
+.card { background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+.t-dyk, .t-def { color: var(--brand-ink); font-weight: 800; font-size: 28px; }
+.t-def { font-size: 25px; }
+.t-dyk-body, .t-def-body { font-size: 17px; line-height: 1.45; color: var(--ink); }
+.close-sq { background: var(--accent); display: grid; place-items: center; }
+.close-sq:hover { background: #008895; }
+.close-sq svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; }
+.alert p { left: 32px; top: 30px; right: 32px; font-weight: 600; font-size: 18px; text-align: center; }
+
+/* 3.2 spinner */
+.spinner { border-radius: 50%; background: conic-gradient(from 0deg, transparent 0 8%, var(--accent) 8% 12%, transparent 12% 20%, var(--accent) 20% 24%, transparent 24% 33%, var(--brand) 33% 37%, transparent 37% 45%, var(--brand) 45% 49%, transparent 49% 58%, var(--accent) 58% 62%, transparent 62% 70%, var(--accent) 70% 74%, transparent 74% 83%, var(--brand) 83% 87%, transparent 87% 95%, var(--brand) 95% 99%, transparent 99%);
+  -webkit-mask: radial-gradient(circle, transparent 0 40%, #000 41% 100%); mask: radial-gradient(circle, transparent 0 40%, #000 41% 100%); animation: spin 1.4s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 3.3 results */
+.result { border-radius: 2px; }
+.res-text h2 { position: static; color: var(--brand-ink); font-weight: 800; font-size: 24px; line-height: 1.25; margin: 0 0 14px; }
+.res-text p { position: static; font-size: 16.5px; line-height: 1.45; margin: 0 0 12px; color: #555; }
+.res-text .score { color: var(--brand-ink); font-weight: 800; }
+
+/* 4.1 */
+.sec-tag { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; color: var(--brand-ink); }
+.sec-tag span { background: var(--brand); color: #fff; padding: 6px 12px; font-weight: 700; }
+.psa-card { background: #fff; box-shadow: 0 0 0 1px #d6dfe1; }
+.note { background: var(--brand); color: #fff; display: flex; gap: 14px; padding: 18px 20px 18px 16px; }
+.note > * { position: static; }
+.note p { font-size: 16px; line-height: 1.45; margin: 0; }
+.note-ic svg { width: 30px; height: 30px; fill: none; stroke: var(--yellow); stroke-width: 2; }
+
+/* 4.2 key terms */
+.term { background: #fff; border: 1px solid #d9e2e4; box-shadow: 0 2px 6px rgba(0,0,0,.06); text-align: left; transition: box-shadow .15s, border-color .15s; }
+.term:hover { border-color: var(--accent); box-shadow: 0 4px 12px rgba(0,160,175,.25); }
+.term .simg { position: absolute; }
+.term-label { position: absolute; left: 82px; right: 30px; top: 50%; transform: translateY(-50%); font: 700 16px/1.25 "Montserrat", sans-serif; color: var(--brand-ink); }
+.term.long .term-label { font-size: 13.5px; }
+.term-tick { position: absolute; right: 8px; top: 8px; display: none; }
+.term-tick svg { width: 18px; height: 18px; fill: none; stroke: var(--accent); stroke-width: 3; }
+.term.seen .term-tick { display: block; }
+
+/* Captions move left while a feedback panel is open, so they never cover its buttons */
+.cap-left #captions { padding: 0 500px 0 30px; }
+
+/* Settings > Accessible text: bigger slide text */
+.a11y-text .t-body, .a11y-text .opt, .a11y-text .t-fb-body, .a11y-text .t-dyk-body, .a11y-text .t-def-body { font-size: 19px; }

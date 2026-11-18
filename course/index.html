@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The CPP and Me</title>
+<link rel="stylesheet" href="css/player.css">
+<link rel="stylesheet" href="css/slides.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+<div id="app" class="menu-closed">
+  <a class="skip" href="#stage">Skip to slide</a>
+
+  <aside id="sidebar" aria-label="Course menu and resources" hidden>
+    <div class="side-tabs" role="tablist">
+      <button role="tab" id="tab-menu" aria-selected="true" aria-controls="panel-menu">Menu</button>
+      <button role="tab" id="tab-res" aria-selected="false" aria-controls="panel-res">Resources</button>
+      <button class="side-search" aria-label="Search the menu" title="Search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+      </button>
+    </div>
+    <div class="side-search-row" hidden><input type="search" id="menu-search" placeholder="Search the menu" aria-label="Search the menu"></div>
+    <nav id="panel-menu" role="tabpanel" aria-labelledby="tab-menu"><ul id="menu-tree"></ul></nav>
+    <div id="panel-res" role="tabpanel" aria-labelledby="tab-res" hidden><ul id="res-list"></ul></div>
+  </aside>
+
+  <div id="main">
+    <header id="topbar">
+      <button id="btn-menu" class="icon-btn" aria-label="Open sidebar" aria-expanded="false" aria-controls="sidebar" title="Sidebar (Ctrl+Alt+M)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <h1 id="course-title">The CPP and Me</h1>
+      <span id="slide-count"></span>
+    </header>
+
+    <div id="stage-area">
+      <div id="stage-frame">
+        <section id="stage" tabindex="-1" aria-live="off" aria-label="Slide"></section>
+        <div id="captions" aria-hidden="true"><span></span></div>
+        <div id="cover">
+          <div class="cover-card">
+            <img src="assets/img/ja_triangles.png" alt="" class="cover-logo">
+            <p class="cover-kicker">JA Canada</p>
+            <h2>The CPP and Me</h2>
+            <p>Investing in My Financial Future</p>
+            <p class="cover-resume-q">Welcome back! Would you like to resume where you left off?</p>
+            <div class="cover-btns">
+              <button id="btn-resume" class="sbtn pill-white" hidden><span>Resume</span>
+                <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><path d="M8 5v14l11-7z"/></svg></span></button>
+              <button id="btn-start" class="sbtn pill-white"><span class="lbl">Start course</span>
+                <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><path d="M8 5v14l11-7z"/></svg></span></button>
+            </div>
+            <p class="cover-note">Make sure your sound is on.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer id="controls">
+      <button id="btn-play" class="icon-btn" aria-label="Play" title="Play (Ctrl+Alt+P)">
+        <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5v14l11-7z"/></svg>
+        <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+      </button>
+      <div id="seek" role="slider" tabindex="0" aria-label="Slide progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="track"><div class="fill"></div><div class="knob"></div></div>
+      </div>
+      <button id="btn-replay" class="icon-btn" aria-label="Replay" title="Replay (Ctrl+Alt+R)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12a7 7 0 1 1-2.05-4.95"/><path d="M19 4v4h-4" /></svg>
+      </button>
+      <div class="pop-wrap">
+        <button id="btn-vol" class="icon-btn" aria-label="Volume" aria-expanded="false" title="Volume (Ctrl+Alt+D to mute)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fillp" d="M4 9h4l5-4v14l-5-4H4z"/><path class="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+        </button>
+        <div class="pop" id="pop-vol" hidden><input type="range" id="vol" min="0" max="1" step="0.05" value="1" aria-label="Volume"></div>
+      </div>
+      <button id="btn-cc" class="icon-btn" aria-label="Captions" aria-pressed="true" title="Hide captions (Ctrl+Alt+C)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10.5 10.2a2.2 2.2 0 1 0 0 3.6M16.5 10.2a2.2 2.2 0 1 0 0 3.6"/></svg>
+      </button>
+      <div class="pop-wrap">
+        <button id="btn-speed" class="icon-btn" aria-label="Playback speed" aria-expanded="false" title="Playback speed">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" stroke-dasharray="3 2.2"/><path class="fillp" d="M10 8.5v7l5.5-3.5z"/></svg>
+        </button>
+        <div class="pop" id="pop-speed" hidden role="menu" aria-label="Playback speed"></div>
+      </div>
+      <div class="pop-wrap">
+        <button id="btn-settings" class="icon-btn" aria-label="Settings" aria-expanded="false" title="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fillp" d="M19.4 13a7.6 7.6 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.4 7.4 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7.4 7.4 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 11a7.6 7.6 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.4 7.4 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7.4 7.4 0 0 0 1.7-1l2.4 1 2-3.4zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg>
+        </button>
+        <div class="pop pop-wide" id="pop-settings" hidden>
+          <label class="switch-row"><span>Accessible text</span><input type="checkbox" id="opt-a11y"></label>
+          <label class="switch-row"><span>Zoom to fill</span><input type="checkbox" id="opt-zoom"></label>
+          <p class="kbd-title">Keyboard shortcuts</p>
+          <dl class="kbd">
+            <dt>Play / pause</dt><dd>Ctrl+Alt+P</dd><dt>Previous</dt><dd>Ctrl+Alt+,</dd><dt>Next</dt><dd>Ctrl+Alt+.</dd>
+            <dt>Replay</dt><dd>Ctrl+Alt+R</dd><dt>Captions</dt><dd>Ctrl+Alt+C</dd><dt>Mute</dt><dd>Ctrl+Alt+D</dd>
+          </dl>
+        </div>
+      </div>
+      <button id="btn-full" class="icon-btn" aria-label="Enter full-screen mode" title="Enter full-screen mode">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg>
+      </button>
+      <button id="btn-prev" class="nav-btn" title="Previous (Ctrl+Alt+,)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>PREV</button>
+      <button id="btn-next" class="nav-btn" title="Next (Ctrl+Alt+.)">NEXT
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    </footer>
+  </div>
+  <div id="sr-live" class="sr-only" aria-live="polite"></div>
+</div>
+
+<!-- Plain script tags (no fetch, no modules) so the course runs by double-clicking index.html.
+     lms.js talks to the LMS (SCORM 1.2 or 2004) when the course is launched from one; on its own it does nothing. -->
+<script src="js/lms.js"></script>
+<script src="js/media-data.js"></script>
+<script src="js/player.js"></script>
+<script src="js/slides.js"></script>
+<script>Player.init();</script>
+</body>
+</html>

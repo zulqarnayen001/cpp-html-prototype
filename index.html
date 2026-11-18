@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>The CPP and Me: HTML prototype</title>
+<style>
+  @font-face { font-family: "Montserrat"; src: url("course/assets/fonts/Montserrat-Medium.ttf"); font-weight: 500; }
+  @font-face { font-family: "Montserrat"; src: url("course/assets/fonts/Montserrat-Bold.ttf"); font-weight: 700; }
+  @font-face { font-family: "Montserrat"; src: url("course/assets/fonts/Montserrat-ExtraBold.ttf"); font-weight: 800; }
+  :root { --brand: #285f74; --brand-dark: #1d4a5b; --ink: #23343a; --muted: #4c5d63; --pale: #edf2f3; --line: #d6e0e3; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { min-height: 100vh; background: var(--pale); color: var(--ink); font: 500 16px/1.5 "Montserrat", system-ui, sans-serif; }
+  .hero { background: var(--brand) url("course/assets/img/s1_1_hero.png") right 30% / cover no-repeat; position: relative; }
+  .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #285f74 0 42%, rgba(40,95,116,.6) 70%, rgba(40,95,116,.25)); }
+  .hero-in { position: relative; max-width: 960px; margin: 0 auto; padding: 56px 24px 64px; color: #fff; }
+  .kicker { margin: 0 0 10px; font-weight: 700; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; opacity: .9; }
+  h1 { margin: 0 0 12px; font-weight: 800; font-size: clamp(32px, 6vw, 48px); line-height: 1.08; max-width: 14ch; }
+  .lead { margin: 0; max-width: 34rem; font-size: 18px; }
+  main { max-width: 960px; margin: 0 auto; padding: 32px 24px 48px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; margin-top: -56px; position: relative; }
+  .card { display: flex; flex-direction: column; gap: 8px; padding: 22px 22px 20px; background: #fff; border-radius: 14px;
+          box-shadow: 0 0 0 1px var(--line), 0 6px 18px rgba(20,60,70,.08); color: inherit; text-decoration: none; transition: box-shadow .15s, transform .15s; }
+  .card:hover { box-shadow: 0 0 0 2px var(--brand), 0 8px 22px rgba(20,60,70,.12); transform: translateY(-2px); }
+  .card:focus-visible { outline: 3px solid #f2b705; outline-offset: 3px; }
+  .card h2 { margin: 0; font-size: 19px; font-weight: 800; color: var(--brand); }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .card .go { margin-top: auto; padding-top: 8px; font-weight: 700; color: var(--brand); }
+  .notes { margin-top: 28px; color: var(--muted); font-size: 15px; }
+  .notes ul { padding-left: 20px; margin: 8px 0 0; }
+  .notes li { margin: 4px 0; }
+  footer { max-width: 960px; margin: 0 auto; padding: 0 24px 32px; color: var(--muted); font-size: 13px; }
+  @media (max-width: 600px) {
+    .hero { background-position: 70% 20%; }
+    .hero::before { background: linear-gradient(180deg, rgba(40,95,116,.55), #285f74 70%); }
+    .hero-in { padding: 40px 20px 72px; }
+    main { padding: 24px 16px 40px; }
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-in">
+    <p class="kicker">JA Canada &middot; Prototype for internal review</p>
+    <h1>The CPP and Me, built in HTML</h1>
+    <p class="lead">The CPP and Me course, rebuilt as a plain web page without Storyline. On a phone, every slide rearranges to fit the screen.</p>
+  </div>
+</header>
+<main>
+  <div class="cards">
+    <a class="card" href="course/index.html">
+      <h2>Open the course</h2>
+      <p>Play it the way a student would. Turn your sound on, then select Start course.</p>
+      <span class="go">Open the course</span>
+    </a>
+    <a class="card" href="course/phone-preview.html">
+      <h2>See it at phone sizes</h2>
+      <p>One slide at seven phone sizes side by side, from a folded phone to the biggest iPhone. Best on a laptop.</p>
+      <span class="go">Open the phone preview</span>
+    </a>
+    <a class="card" href="https://360.articulate.com/review/content/705bf21e-4aaf-43ec-8732-2b4793527478/review" target="_blank" rel="noopener">
+      <h2>Compare with Storyline</h2>
+      <p>The published Storyline version of the same course on Review 360, to view side by side.</p>
+      <span class="go">Open in Review 360</span>
+    </a>
+  </div>
+  <div class="notes">
+    <strong>What's in this prototype</strong>
+    <ul>
+      <li>12 of the course's 19 slides, with the course's own text, narration, captions and illustrations.</li>
+      <li>The video slide is a placeholder, and the quiz has 2 of its 7 rounds.</li>
+      <li>On a desktop the slide keeps Storyline's 16:9 shape; on a phone it switches to a phone layout.</li>
+      <li>It works with the keyboard, and it's packaged for SCORM (completion, score and resume).</li>
+    </ul>
+  </div>
+</main>
+<footer>Prototype, not the live course. The live course is on JA Campus.</footer>
+</body>
+</html>

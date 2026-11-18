@@ -1,0 +1,308 @@
+/* Phone layout for the HTML player, on the same pattern as the Athleader course player.
+   - body.portrait when the player area is under 600 px wide or clearly taller than wide (js/player.js fit()).
+     The stage is then exactly as wide as the phone (down to 280 px), so 1 stage pixel = 1 screen pixel.
+   - Each slide uses the phone composition for its screen type (data-p on the slide):
+       split   picture across the top, fading into the teal panel; title and main button at the foot (1.1, 2.1, 2.3, Thank You)
+       stack   content in reading order, as cards (1.2, Extension Activity)
+       quiz    picture banner, question, answer cards, Submit across the foot; feedback is a bottom sheet
+       video, center (Challenge Complete), results, terms
+   - "Fit first, scroll if needed": a slide a little too long zooms out (never below 94%); a longer one scrolls,
+     with a fade at the foot and room left for the captions.
+   - One type scale with phone sizes (the --t-* roles), 16 px body text, 44 px touch targets or more.
+   On the desktop nothing here applies: the slide stays the fixed 960 x 540 Storyline layout. */
+
+body.portrait {
+  --t-tag: 13px; --t-small: 15px; --t-body: 16px; --t-lead: 18px; --t-h3: 20px; --t-h2: 23px; --t-h1s: 25px; --t-h1: 27px;
+  --gut: clamp(16px, 5.4vw, 24px);   /* side margin */
+  --foot: 96px;                      /* kept clear at the foot of every screen for the captions */
+  --r-card: 14px;
+  --hero: .58;                       /* share of the screen the picture takes on split screens */
+  --ink-2: #4c5d63;
+  --accent-ink: #007f8b;             /* the course teal, dark enough for white text (4.6:1) */
+}
+
+/* ===================== Player frame ===================== */
+#slide-count { display: none; }
+body.portrait #topbar { height: 52px; gap: 6px; padding: 0 12px 0 4px; border-bottom: 1px solid #e3eaec; }
+body.portrait #btn-menu { width: 44px; height: 44px; }
+body.portrait #course-title { flex: 1; min-width: 0; font-size: 16px; }
+body.portrait #slide-count {
+  display: inline-block; flex: none; white-space: nowrap;
+  font: 600 13px/1 "Montserrat", sans-serif; color: var(--brand); background: #e4eff2; padding: 6px 10px; border-radius: 12px;
+}
+body.portrait #slide-count:empty { display: none; }
+
+body.portrait #controls { position: relative; height: 60px; gap: 2px; padding: 0 10px 0 6px; border-top: 1px solid #e3eaec; }
+/* The progress bar becomes a thin line along the top of the control bar, still draggable */
+body.portrait #seek { position: absolute; left: 0; right: 0; top: -9px; height: 18px; margin: 0; z-index: 5; }
+body.portrait #seek .track { height: 3px; border-radius: 0; background: #d5dfe2; }
+body.portrait #controls .icon-btn { width: 44px; height: 44px; }
+body.portrait #btn-vol { display: none; }               /* phones use their own volume buttons */
+body.portrait #btn-replay { display: grid; }
+body.portrait .nav-btn { height: 44px; padding: 0 14px; gap: 4px; border-radius: 22px; font-size: 14px; letter-spacing: .05em; }
+body.portrait #btn-prev { margin-left: auto; border: 1.5px solid #c8d5d9; }
+body.portrait #btn-next { margin-left: 6px; background: var(--brand); color: #fff; }
+body.portrait #btn-next svg { stroke: #fff; }
+body.portrait #btn-next:hover { background: #1d4a5b; }
+body.portrait #btn-prev[hidden] + #btn-next { margin-left: auto; }
+@media (max-width: 359px) {
+  body.portrait #btn-prev { font-size: 0; gap: 0; padding: 0 10px; }   /* arrow only; "PREV" stays its name */
+  body.portrait .nav-btn { padding: 0 12px; }
+}
+@media (max-width: 339px) { body.portrait #btn-replay { display: none; } }
+
+/* Captions: a band above the control bar */
+body.portrait #captions { padding: 0 var(--gut) !important; bottom: 12px; }
+body.portrait #captions span { max-width: 100%; font-size: 14px; line-height: 1.4; padding: 7px 12px; border-radius: 10px; background: rgba(14, 38, 47, .9); }
+
+.pfade {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 72px; z-index: 15; pointer-events: none; opacity: 0;
+  background: linear-gradient(180deg, transparent, var(--fade, #fff) 80%); transition: opacity .2s;
+}
+body.portrait #stage-frame.pscroll:not(.pend) .pfade { opacity: 1; }
+
+/* ===================== The slide becomes a column in reading order ===================== */
+body.portrait .slide {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 14px;
+  padding: 24px var(--gut) var(--foot); box-sizing: border-box;
+  overflow-x: clip; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+}
+body.portrait .slide::-webkit-scrollbar { display: none; }
+/* Storyline positions (inline left/top/width/height) give way to the flow */
+body.portrait .slide > *,
+body.portrait .slide [role=radiogroup] > .opt,
+body.portrait .nav-row > *,
+body.portrait .psa-card > *,
+body.portrait .card.result > *,
+body.portrait .layer.fb-layer > *,
+body.portrait .fb-panel > :not(.fb-corner),
+body.portrait .layer.dim > .card,
+body.portrait .layer.dim > .card > :not(.close-sq) {
+  position: relative !important; left: auto !important; top: auto !important; right: auto !important; bottom: auto !important;
+  width: auto !important; height: auto !important; translate: none !important;
+  max-width: 100%; flex: none; margin: 0; box-sizing: border-box;
+}
+body.portrait .slide :where(h2, h3, p, span, button, a) { overflow-wrap: break-word; }
+body.portrait .slide :where(p) { text-wrap: pretty; }
+body.portrait .slide :where(h2, h3) { text-wrap: balance; }
+body.portrait .slide > .panel { display: none; }
+body.portrait .slide > .simg { max-height: calc(var(--sh) * .42); }
+@media (prefers-reduced-motion: reduce) {
+  body.portrait .tl { transition: opacity .2s !important; transform: none !important; }
+}
+
+/* ===================== Type: phone sizes ===================== */
+body.portrait .t-hero { font-size: clamp(32px, 9.6vw, 40px); line-height: 1.06; }
+body.portrait .t-hero.sm { font-size: clamp(30px, 8.8vw, 36px); }
+body.portrait .t-hero-sub { font-size: var(--t-lead); line-height: 1.3; font-weight: 600; }
+body.portrait .t-title { font-size: var(--t-h1s); line-height: 1.18; }
+body.portrait .t-panel-title { font-size: clamp(25px, 7.4vw, 30px); line-height: 1.15; }
+body.portrait .t-q { font-size: var(--t-h3); line-height: 1.3; }
+body.portrait .t-body, body.portrait .t-body.sm, body.portrait .t-body.xs, body.portrait .t-panel-body { font-size: var(--t-body); line-height: 1.45; }
+body.portrait .t-muted { font-size: var(--t-small); }
+body.portrait .opt { font-size: var(--t-body); }
+body.portrait .t-fb { font-size: var(--t-h2); }
+body.portrait .t-fb-body, body.portrait .t-dyk-body, body.portrait .t-def-body { font-size: var(--t-body); line-height: 1.5; }
+body.portrait .t-dyk, body.portrait .t-def { font-size: var(--t-h3); line-height: 1.25; }
+body.portrait .res-text h2 { font-size: var(--t-h3); line-height: 1.25; margin-bottom: 8px; }
+body.portrait .res-text p { font-size: var(--t-small); line-height: 1.45; margin-bottom: 10px; }
+body.portrait .a11y-text .t-body, body.portrait .a11y-text .opt, body.portrait .a11y-text .t-fb-body,
+body.portrait .a11y-text .t-dyk-body, body.portrait .a11y-text .t-def-body { font-size: 18px; }
+
+/* ===================== Buttons ===================== */
+body.portrait .slide .sbtn, body.portrait .layer .sbtn { min-height: 48px; padding: 12px 24px; font-size: 17px; border-radius: 26px; }
+/* The screen's main action spans the column, where a thumb reaches it */
+body.portrait .slide > .sbtn { align-self: stretch; }
+body.portrait .pill-teal { background: var(--accent-ink); border-color: var(--accent-ink); }
+body.portrait .pill-teal:hover { background: #006a74; border-color: #006a74; }
+
+/* ===================== split: picture across the top, teal content at the foot ===================== */
+body.portrait .slide[data-p=split] { background: var(--brand); padding-top: calc(var(--sh) * .34); gap: 12px; }
+body.portrait .slide[data-p=split] > .photo {
+  position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important;
+  height: calc(var(--sh) * var(--hero)) !important; max-width: none; max-height: none; object-fit: cover; object-position: 70% 60%;
+}
+/* The desktop's teal panel becomes the fade from the picture into the teal */
+body.portrait .slide[data-p=split] > .panel {
+  display: block; position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important;
+  height: calc(var(--sh) * var(--hero) + 2px) !important; pointer-events: none;
+  background: linear-gradient(180deg, rgba(40, 95, 116, 0) 38%, rgba(40, 95, 116, .72) 68%, #285f74 97%);
+}
+body.portrait .slide[data-p=split] > .panel + * { margin-top: auto; }
+body.portrait .slide[data-p=split] > :not(.photo, .panel) { z-index: 1; text-shadow: 0 1px 14px rgba(16, 45, 56, .35); }
+body.portrait .slide[data-p=split] > .sbtn { margin-top: 8px; text-shadow: none; }
+body.portrait .slide[data-p=split] > .logo {
+  position: absolute !important; left: var(--gut) !important; top: 16px !important; width: 36px !important; height: 45px !important;
+}
+body.portrait .slide[data-id=s1_1] > .photo { object-position: 74% 70%; }
+body.portrait .slide[data-id=s2_1] > .photo { object-position: 66% 40%; }
+body.portrait .slide[data-id=s2_3] > .photo { object-position: 62% 55%; }
+body.portrait .slide[data-id=s4_4] > .photo { object-position: 58% 50%; }
+
+/* Start screen, same composition */
+body.portrait #cover {
+  place-items: end stretch; background-color: var(--brand, #285f74); background-repeat: no-repeat;
+  background-size: auto calc(100% * .58); background-position: 74% 0;
+}
+body.portrait #cover::before { background: linear-gradient(180deg, rgba(40, 95, 116, 0) 22%, rgba(40, 95, 116, .72) 40%, #285f74 56%); }
+body.portrait .cover-card { padding: 0 var(--gut) 28px; }
+body.portrait .cover-logo { width: 40px; margin-bottom: 14px; }
+body.portrait .cover-card h2 { font-size: clamp(32px, 9.6vw, 40px); line-height: 1.06; }
+body.portrait .cover-card h2 + p { font-size: var(--t-lead); margin: 8px 0 22px; }
+body.portrait .cover-btns { flex-direction: column; align-items: stretch; gap: 10px; }
+body.portrait #btn-start, body.portrait #btn-resume { height: 50px; font-size: 18px; border-radius: 26px; }
+body.portrait .cover-note { text-align: center; }
+
+/* ===================== stack: 1.2 Navigating the Course ===================== */
+body.portrait .nav-row {
+  display: flex; align-items: center; gap: 14px; align-self: stretch;
+  background: #fff; border-radius: var(--r-card); padding: 10px 14px 10px 10px;
+  box-shadow: 0 0 0 1px #dde6e8, 0 2px 6px rgba(20, 60, 70, .06);
+}
+/* The icon files have wide margins of their own, so they fill the circle with almost no padding */
+body.portrait .nav-row > .simg { width: 46px !important; height: 46px !important; padding: 1px; border-radius: 50%; background: #e6f2f4; flex: none; }
+body.portrait .nav-row > p { flex: 1 1 auto; min-width: 0; line-height: 1.35; }
+body.portrait .nav-row br { display: none; }
+body.portrait .slide > .shot { align-self: stretch; aspect-ratio: 540 / 269; border-radius: 12px; box-shadow: 0 6px 16px rgba(20, 60, 70, .14); }
+body.portrait .shot > .simg { position: absolute; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; }
+body.portrait .slide > .callout {
+  align-self: stretch; padding: 12px 14px 12px 54px; border-radius: var(--r-card); box-shadow: none;
+  font-size: var(--t-body); font-weight: 600; line-height: 1.38;
+}
+body.portrait .callout::after { display: none; }
+body.portrait .callout::before {
+  content: ""; position: absolute; left: 12px; top: 50%; width: 30px; height: 30px; margin-top: -15px; border-radius: 50%;
+  background: var(--brand) center / 16px no-repeat
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M4 7h16M4 12h16M4 17h16'/%3E%3C/svg%3E");
+}
+body.portrait .callout-down::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l-6 6 6 6M15 6l6 6-6 6'/%3E%3C/svg%3E");
+}
+
+/* ===================== stack: Extension Activity ===================== */
+body.portrait .sec-tag { font-size: var(--t-tag); }
+body.portrait .slide > .framed {
+  align-self: stretch; width: auto !important; aspect-ratio: 16 / 10; max-height: none; object-fit: cover;
+  border-radius: var(--r-card); box-shadow: none;
+}
+body.portrait .slide > .psa-card { align-self: stretch; padding: 16px 18px; border-radius: var(--r-card); }
+body.portrait .slide > .note { align-self: stretch; padding: 14px 16px; gap: 12px; border-radius: var(--r-card); }
+body.portrait .note p { font-size: var(--t-small); }
+body.portrait .note-ic svg { width: 26px; height: 26px; }
+
+/* ===================== video placeholder ===================== */
+/* Centred with auto margins, not justify-content, so a short phone can still scroll to the top */
+body.portrait .slide[data-p=video] { align-items: center; text-align: center; }
+body.portrait .slide[data-p=video] > .video-ph { margin-top: auto; }
+body.portrait .slide[data-p=video] > :last-child { margin-bottom: auto; }
+body.portrait .slide > .video-ph {
+  align-self: stretch; padding: 28px 18px; gap: 4px; border-radius: var(--r-card);
+  background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .18);
+}
+body.portrait .vp-play { width: 60px; height: 60px; margin-bottom: 6px; }
+body.portrait .vp-play svg { width: 30px; height: 30px; }
+body.portrait .vp-title { font-size: var(--t-h3); }
+body.portrait .vp-note { font-size: var(--t-small); margin-bottom: 0 !important; }
+
+/* ===================== quiz ===================== */
+body.portrait .slide[data-p=quiz] { gap: 12px; }
+body.portrait .slide[data-p=quiz] > .qimg {
+  order: -1; align-self: stretch; width: auto !important; height: clamp(112px, calc(var(--sh) * .25), 240px) !important;
+  margin: -24px calc(var(--gut) * -1) -10px; max-width: none; max-height: none; object-fit: cover;
+  -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent); mask-image: linear-gradient(180deg, #000 72%, transparent);
+}
+body.portrait .slide[data-id=q1] > .qimg { object-position: 50% 18%; }
+body.portrait .slide[data-id=q2] > .qimg { object-position: 50% 30%; }
+body.portrait .slide > .q-tag { padding: 6px 12px; border-radius: 12px; font-size: var(--t-tag); letter-spacing: .05em; text-transform: uppercase; }
+body.portrait .slide[data-p=quiz] > [role=radiogroup] { align-self: stretch; display: flex; flex-direction: column; gap: 10px; }
+body.portrait .slide [role=radiogroup] > .opt {
+  min-height: 58px; padding: 12px 14px; gap: 12px; border-radius: 12px; line-height: 1.35;
+  background: #fff; box-shadow: 0 0 0 1px #d6dfe1;
+}
+body.portrait .slide [role=radiogroup] > .opt:hover { background: #f3f7f8; }
+body.portrait .slide [role=radiogroup] > .opt[aria-checked=true] { background: #e6f4f5; box-shadow: 0 0 0 2px var(--accent-ink); }
+body.portrait .opt .radio { width: 22px; height: 22px; }
+body.portrait .slide[data-p=quiz] > .sbtn { margin-top: 4px; background: var(--brand); color: #fff; border-color: var(--brand); }
+body.portrait .slide[data-p=quiz] > .sbtn:hover { background: #1d4a5b; }
+
+/* Feedback: a bottom sheet in the panel colour, over a dimmed question */
+body.portrait .layer.fb-layer {
+  inset: auto 0 0 0; max-height: 88%; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
+  padding: 10px var(--gut) var(--foot); background: var(--brand); pointer-events: auto; border-radius: 20px 20px 0 0;
+  box-shadow: 0 0 0 100vmax rgba(20, 45, 55, .5), 0 -8px 24px rgba(0, 0, 0, .25);
+  scrollbar-width: none;
+}
+body.portrait .layer.fb-layer::before {
+  content: ""; flex: none; align-self: center; width: 40px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .35); margin-bottom: 6px;
+}
+body.portrait .fb-layer > .fb-panel {
+  display: grid; grid-template-columns: 36px 1fr; align-items: center; column-gap: 12px; row-gap: 10px;
+  background: transparent; box-shadow: none; padding: 4px 0 6px;
+}
+body.portrait .fb-panel > .fb-corner {
+  position: relative !important; left: auto !important; top: auto !important; width: 36px; height: 36px;
+  clip-path: none; border-radius: 50%; display: grid; place-items: center;
+}
+body.portrait .fb-panel > .fb-corner svg { position: static; width: 18px; height: 18px; }
+body.portrait .fb-panel > .t-fb { margin: 0; }
+body.portrait .fb-panel > .t-fb-body { grid-column: 1 / -1; }
+body.portrait .fb-layer > .sbtn { align-self: stretch; }
+body.portrait .tl.anim-slide-in:not(.in) { transform: translateY(40px); }
+
+/* Pop-ups (alert, Did You Know?, key terms): a card centred on the phone */
+body.portrait .layer.dim { display: flex; align-items: center; justify-content: center; padding: 16px var(--gut) var(--foot); }
+body.portrait .layer.dim > .card {
+  width: 100% !important; max-width: 520px; max-height: 100%; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 10px; padding: 22px 20px 24px; border-radius: 18px;
+}
+body.portrait .layer.dim > .card > .close-sq {
+  left: auto !important; right: 10px !important; top: 10px !important; width: 44px !important; height: 44px !important; border-radius: 50%;
+}
+body.portrait .layer.dim > .card > h3 { padding-right: 48px; }
+body.portrait .layer.dim > .card.alert { padding: 26px 22px 22px; align-items: center; text-align: center; }
+body.portrait .layer.dim > .card.alert > p { font-size: var(--t-body); }
+body.portrait .layer.dim > .card.alert > .sbtn { align-self: stretch; }
+
+/* ===================== center: Challenge Complete ===================== */
+body.portrait .slide[data-p=center] {
+  justify-content: flex-start; align-items: center; text-align: center;
+  padding-top: calc(var(--sh) * .12); background: #f3f8f9;
+}
+body.portrait .slide[data-p=center] > .bg {
+  position: absolute !important; left: 0 !important; top: auto !important; bottom: 0 !important;
+  width: 100% !important; height: 60% !important; max-height: none; object-fit: cover; object-position: 50% 100%; pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 34%); mask-image: linear-gradient(180deg, transparent 0, #000 34%);
+}
+body.portrait .slide[data-p=center] > :not(.bg) { z-index: 1; }
+body.portrait .slide[data-p=center] > .t-title { font-size: var(--t-h1); }
+body.portrait .slide > .spinner { width: 64px !important; height: 64px !important; margin-top: 8px; }
+body.portrait .slide > .spinner:not(.in) { display: none; }
+body.portrait .slide[data-p=center] > .sbtn { align-self: center; min-width: min(100%, 260px); margin-top: 8px; }
+
+/* ===================== results ===================== */
+body.portrait .slide[data-p=results] { background: radial-gradient(130% 70% at 50% 0%, #3d8197 0%, var(--brand) 62%); }
+body.portrait .slide[data-p=results] > .bg { display: none; }
+body.portrait .slide > .card.result {
+  margin-block: auto; align-self: stretch; display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 24px 20px 20px; text-align: center; border-radius: 20px;
+}
+body.portrait .card.result > .badge { width: 128px !important; height: 128px !important; }
+body.portrait .card.result > .sbtn { align-self: stretch; }
+body.portrait .res-text .score { display: inline-block; margin: 2px 0 6px; padding: 6px 14px; border-radius: 14px; background: #e4eff2; font-size: var(--t-small); }
+
+/* ===================== terms ===================== */
+body.portrait .slide[data-p=terms] { gap: 10px; }
+body.portrait .slide[data-p=terms] > .t-body { margin: -4px 0 4px; color: var(--ink-2); }
+body.portrait .slide[data-p=terms] > .term {
+  align-self: stretch; min-height: 60px; display: flex; align-items: center; gap: 12px;
+  padding: 8px 40px 8px 10px; border-radius: 12px;
+}
+body.portrait .term > .simg { position: relative !important; left: auto !important; top: auto !important; width: 40px !important; height: 40px !important; flex: none; }
+body.portrait .term-label { position: static; transform: none; font-size: 15px; line-height: 1.25; }
+body.portrait .term.long .term-label { font-size: 14.5px; }
+body.portrait .term::after {
+  content: ""; position: absolute; right: 16px; top: 50%; width: 8px; height: 8px; margin-top: -5px;
+  border-right: 2.5px solid #8aa4ab; border-bottom: 2.5px solid #8aa4ab; transform: rotate(-45deg);
+}
+body.portrait .term.seen::after { display: none; }
+body.portrait .term-tick { right: 12px; top: 50%; margin-top: -9px; }
